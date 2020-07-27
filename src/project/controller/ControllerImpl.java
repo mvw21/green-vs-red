@@ -8,13 +8,34 @@ import java.util.Scanner;
 public class ControllerImpl implements Controller{
 
     private Matrix grid;
-//    private Scanner scanner;
-
 
     public ControllerImpl() {
 
 //        this.scanner = new Scanner(System.in);
 
+    }
+
+
+    @Override
+    public Matrix updateGridForNextGeneration(Matrix matrix, Matrix newMatrix) {
+        for (int row = 0; row < matrix.getRows(); row++) {
+            for (int col = 0; col < matrix.getCols(); col++) {
+                matrix.getGridValues()[row][col] = newMatrix.getGridValues()[row][col];
+            }
+        }
+        return matrix;
+    }
+
+    @Override
+    public Matrix updateGridValues(int row, int col, Matrix matrix, int newValue) {
+        for (int rowN = 0; rowN < matrix.getRows(); rowN++) {
+            for (int colN = 0; colN < matrix.getCols(); colN++) {
+                if(rowN == row && colN == col){
+                    matrix.getGridValues()[row][col] = newValue;
+                }
+            }
+        }
+        return matrix;
     }
 
     @Override
@@ -23,175 +44,175 @@ public class ControllerImpl implements Controller{
     }
 
     @Override
-    public int checkAroundCells(int row, int col, int[][] matrix) {
+    public int checkAroundCells(int row, int col, Matrix matrix) {
 
         int counter = 0;
 
         if (isTopLeftCorner(row, col)) {
-            if (matrix[row][col + 1] == 1) {
+            if (matrix.getGridValues()[row][col + 1] == 1) {
                 counter++;
             }
 
-            if (matrix[row + 1][col + 1] == 1) {
+            if (matrix.getGridValues()[row + 1][col + 1] == 1) {
                 counter++;
             }
 
-            if (matrix[row + 1][col] == 1) {
+            if (matrix.getGridValues()[row + 1][col] == 1) {
                 counter++;
             }
             return counter;
         }
 
-        if (isBottomLeftCorner(row, col,matrix.length)) {
-            if (matrix[row][col + 1] == 1) {
+        if (isBottomLeftCorner(row, col,matrix.getRows())) {
+            if (matrix.getGridValues()[row][col + 1] == 1) {
                 counter++;
             }
 
-            if (matrix[row - 1][col + 1] == 1) {
+            if (matrix.getGridValues()[row - 1][col + 1] == 1) {
                 counter++;
             }
 
-            if (matrix[row - 1][col] == 1) {
+            if (matrix.getGridValues()[row - 1][col] == 1) {
                 counter++;
             }
             return counter;
         }
 
-        if (isBottomRightCorner(row, col,matrix.length,matrix[row].length)) {
-            if (matrix[row][col - 1] == 1) {
+        if (isBottomRightCorner(row, col,matrix.getRows(),matrix.getCols())) {
+            if (matrix.getGridValues()[row][col - 1] == 1) {
                 counter++;
             }
 
-            if (matrix[row - 1][col - 1] == 1) {
+            if (matrix.getGridValues()[row - 1][col - 1] == 1) {
                 counter++;
             }
 
-            if (matrix[row - 1][col] == 1) {
+            if (matrix.getGridValues()[row - 1][col] == 1) {
                 counter++;
             }
             return counter;
         }
 
-        if (isTopRightCorner(row, col,matrix[row].length)) {
-            if (matrix[row][col - 1] == 1) {
+        if (isTopRightCorner(row, col,matrix.getRows())) {
+            if (matrix.getGridValues()[row][col - 1] == 1) {
                 counter++;
             }
 
-            if (matrix[row + 1][col - 1] == 1) {
+            if (matrix.getGridValues()[row + 1][col - 1] == 1) {
                 counter++;
             }
 
-            if (matrix[row + 1][col] == 1) {
+            if (matrix.getGridValues()[row + 1][col] == 1) {
                 counter++;
             }
             return counter;
         }
 
-        if (isOnTopWall(row) && !isTopRightCorner(row,col,matrix[row].length)) {
-            if (matrix[row][col - 1] == 1) {
+        if (isOnTopWall(row) && !isTopRightCorner(row,col,matrix.getRows())) {
+            if (matrix.getGridValues()[row][col - 1] == 1) {
                 counter++;
             }
 
-            if (matrix[row][col + 1] == 1) {
+            if (matrix.getGridValues()[row][col + 1] == 1) {
                 counter++;
             }
 
-            if (matrix[row + 1][col] == 1) {
+            if (matrix.getGridValues()[row + 1][col] == 1) {
                 counter++;
             }
 
-            if (matrix[row + 1][col - 1] == 1) {
+            if (matrix.getGridValues()[row + 1][col - 1] == 1) {
                 counter++;
             }
 
-            if (matrix[row + 1][col + 1] == 1) {
+            if (matrix.getGridValues()[row + 1][col + 1] == 1) {
                 counter++;
             }
             return counter;
         }
 
-        if (isOnLeftWall(col) && !isBottomLeftCorner(row,col,matrix.length)) {
-            if (matrix[row][col + 1] == 1) {
+        if (isOnLeftWall(col) && !isBottomLeftCorner(row,col,matrix.getRows())) {
+            if (matrix.getGridValues()[row][col + 1] == 1) {
                 counter++;
             }
 
-            if (matrix[row - 1][col + 1] == 1) {
+            if (matrix.getGridValues()[row - 1][col + 1] == 1) {
                 counter++;
             }
-            if (matrix[row - 1][col] == 1) {
+            if (matrix.getGridValues()[row - 1][col] == 1) {
                 counter++;
             }
 
-            if (matrix[row + 1][col + 1] == 1) {
+            if (matrix.getGridValues()[row + 1][col + 1] == 1) {
                 counter++;
             }
-            if (matrix[row + 1][col] == 1) {
+            if (matrix.getGridValues()[row + 1][col] == 1) {
                 counter++;
             }
             return counter;
         }
 
-        if (isOnRightWall(col,matrix[row].length) && !isBottomRightCorner(row, col,matrix.length,matrix[row].length)) {
-            if (matrix[row][col - 1] == 1) {
+        if (isOnRightWall(col,matrix.getRows()) && !isBottomRightCorner(row, col,matrix.getRows(),matrix.getCols())) {
+            if (matrix.getGridValues()[row][col - 1] == 1) {
                 counter++;
             }
-            if (matrix[row + 1][col] == 1) {
+            if (matrix.getGridValues()[row + 1][col] == 1) {
                 counter++;
             }
-            if (matrix[row + 1][col - 1] == 1) {
+            if (matrix.getGridValues()[row + 1][col - 1] == 1) {
                 counter++;
             }
-            if (matrix[row - 1][col - 1] == 1) {
+            if (matrix.getGridValues()[row - 1][col - 1] == 1) {
                 counter++;
             }
-            if (matrix[row - 1][col] == 1) {
+            if (matrix.getGridValues()[row - 1][col] == 1) {
                 counter++;
             }
             return counter;
         }
 
-        if (isOnBottomWall(row,matrix.length)) {
-            if (matrix[row][col - 1] == 1) {
+        if (isOnBottomWall(row,matrix.getRows())) {
+            if (matrix.getGridValues()[row][col - 1] == 1) {
                 counter++;
             }
-            if (matrix[row][col + 1] == 1) {
+            if (matrix.getGridValues()[row][col + 1] == 1) {
                 counter++;
             }
-            if (matrix[row - 1][col] == 1) {
+            if (matrix.getGridValues()[row - 1][col] == 1) {
                 counter++;
             }
-            if (matrix[row - 1][col - 1] == 1) {
+            if (matrix.getGridValues()[row - 1][col - 1] == 1) {
                 counter++;
             }
-            if (matrix[row - 1][col + 1] == 1) {
+            if (matrix.getGridValues()[row - 1][col + 1] == 1) {
                 counter++;
             }
             return counter;
         }
 
         if (isNotWall(row, col, matrix)) {
-            if (matrix[row][col - 1] == 1) {
+            if (matrix.getGridValues()[row][col - 1] == 1) {
                 counter++;
             }
-            if (matrix[row][col + 1] == 1) {
+            if (matrix.getGridValues()[row][col + 1] == 1) {
                 counter++;
             }
-            if (matrix[row - 1][col - 1] == 1) {
+            if (matrix.getGridValues()[row - 1][col - 1] == 1) {
                 counter++;
             }
-            if (matrix[row - 1][col] == 1) {
+            if (matrix.getGridValues()[row - 1][col] == 1) {
                 counter++;
             }
-            if (matrix[row - 1][col + 1] == 1) {
+            if (matrix.getGridValues()[row - 1][col + 1] == 1) {
                 counter++;
             }
-            if (matrix[row + 1][col - 1] == 1) {
+            if (matrix.getGridValues()[row + 1][col - 1] == 1) {
                 counter++;
             }
-            if (matrix[row + 1][col + 1] == 1) {
+            if (matrix.getGridValues()[row + 1][col + 1] == 1) {
                 counter++;
             }
-            if (matrix[row + 1][col] == 1) {
+            if (matrix.getGridValues()[row + 1][col] == 1) {
                 counter++;
             }
             return counter;
@@ -199,9 +220,9 @@ public class ControllerImpl implements Controller{
 
         return counter;
     }
-    public boolean isNotWall(int row, int col, int[][] matrix) {
-        return (row > 0 && row < matrix.length - 1) &&
-                (col > 0 && col < matrix[row].length - 1);
+    public boolean isNotWall(int row, int col, Matrix matrix) {
+        return (row > 0 && row < matrix.getRows() - 1) &&
+                (col > 0 && col < matrix.getCols() - 1);
     }
 
     public boolean isOnBottomWall(int row,int length){

@@ -4,11 +4,16 @@ import project.models.Matrix;
 
 public interface Controller {
 
+    Matrix updateGridForNextGeneration(Matrix matrix, Matrix newMatrix);
+
+    Matrix updateGridValues(int row , int col, Matrix matrix, int newValue);
+
     Matrix createMatrix(int row, int col, int[][] matrix);
 
-    int checkAroundCells(int row, int col, int[][] matrix);
+//    int checkAroundCells(int row, int col, int[][] matrix);
+    int checkAroundCells(int row, int col, Matrix matrix);
 
-    boolean isNotWall(int row, int col, int[][] matrix);
+    boolean isNotWall(int row, int col, Matrix matrix);
 
     boolean isOnBottomWall(int row,int length);
 

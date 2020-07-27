@@ -10,7 +10,7 @@ import static project.common.ConstantMessages.*;
 
 public class EngineImpl implements Engine {
     private final Controller controller;
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
 
     public EngineImpl(Controller controller) {
         this.controller = controller;
@@ -30,9 +30,9 @@ public class EngineImpl implements Engine {
 
         System.out.println(ENTER_GRID_VALUES);
 
-        int[][] matrix = fillMatrix(params);
-//        Matrix matrix1 = new Matrix(matrixRows,matrixCols,matrix);
-        Matrix matrix1 = this.controller.createMatrix(matrixRows,matrixCols,matrix);
+        int[][] matrixInit = fillMatrix(params);
+
+        Matrix matrix = this.controller.createMatrix(matrixRows,matrixCols,matrixInit);
         System.out.println(ENTER_CELL_COORDINATES_AND_ITERATIONS);
 
         int[] lastRow = Arrays.stream(scanner.nextLine().split(","))
@@ -47,40 +47,37 @@ public class EngineImpl implements Engine {
 
         while (n > 0) {
 
-            int[][] newMatrix = new int[matrixRows][matrixCols];
-//            Matrix newMatrix = new Matrix();
+            Matrix newMatrix = this.controller.createMatrix(matrixRows,matrixCols,new int[matrixRows][matrixCols]);
 
-            for (int row = 0; row < matrix.length; row++) {
-                for (int col = 0; col < matrix[row].length; col++) {
+            for (int row = 0; row < matrix.getRows(); row++) {
+                for (int col = 0; col < matrix.getCols(); col++) {
 
-                    int positionToCheck = matrix[row][col];
+                    int positionToCheck = matrix.getGridValues()[row][col];
 
                     int numberOfGreenCells = controller.checkAroundCells(row, col, matrix);
 
                     if (positionToCheck == 0) {  //ако клетката е червена
                         if (numberOfGreenCells == 3 || numberOfGreenCells == 6) {
-                            newMatrix[row][col] = 1;
+                           this.controller.updateGridValues(row,col,newMatrix,1);
+
                         } else {
-                            newMatrix[row][col] = 0;
+                            this.controller.updateGridValues(row,col,newMatrix,0);
                         }
                     } else if (positionToCheck == 1) {  //ако клетката е зелена
                         if (controller.isInRange(numberOfGreenCells)) {
-                            newMatrix[row][col] = 0;
+                            this.controller.updateGridValues(row,col,newMatrix,0);
                         } else {
-                            newMatrix[row][col] = 1;
+                            this.controller.updateGridValues(row,col,newMatrix,1);
                         }
                     }
                 }
 
             }
 
-            for (int row = 0; row < newMatrix.length; row++) {
-                for (int col = 0; col < newMatrix[row].length; col++) {
-                    matrix[row][col] = newMatrix[row][col];
-                }
-            }
+            matrix = this.controller.updateGridForNextGeneration(matrix,newMatrix);
 
-            if (matrix[x1][y1] == 1) {
+
+            if (matrix.getGridValues()[x1][y1] == 1) {
                 greenCounter++;
             }
 
